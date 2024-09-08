@@ -6,7 +6,7 @@ class dbfunctions:
         cursor.execute('''INSERT INTO {} (Name, Password, Balance) VALUES(?, ?, ?)'''.format(table), (name, password, balance))
     
     def insertTransaction(cursor, table, UserID, CompanyName, Cost):
-        Cost = -Cost
+        Cost = -int(Cost)
         cursor.execute('''INSERT INTO {} (UserID, CompanyName, Cost) VALUES(?, ?, ?)'''.format(table), (UserID, CompanyName, Cost))
         
     def updateCustomer(cursor, CustomerID, balance):   
