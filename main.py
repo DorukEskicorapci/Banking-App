@@ -112,17 +112,11 @@ if sqliteConnection:
     print('Database connection closed')
 
     
-
-        #filecontrol = open("demofile.txt", "a")
-        
-        #filecontrol.write(dbfunctions.return_select(cursor))
  
     '''
-        dbfunctions.insert(cursor, 'John Doe', 50, 100)
         
-
         f = open("demofile3.txt", "w")
-        f.write("Woops! I have deleted the content!")
+        f.write("TEXT")
         f.close()
 
         "x" - Create - will create a file, returns an error if the file exist
