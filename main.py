@@ -9,43 +9,46 @@ def useraccess(cursor, IDinput, userinput, passwordinput):
         print('User Access Granted' + '\n')
     else:
         print('User Access Denied' + '\n' + 'Redirecting to main menu')
-        driver()
+        driver(cursor, sqliteConnection)
             
         
-    print('1. View your balance' + '\n' + '2. View your transaction history' + '\n' + '3. Make new transaction' + '\n' + '4. Delete your account' + '\n' + '5. Exit')
+    print('1. View your balance' + '\n' + '2. View your transaction history' + '\n' + '3. Make new transaction' + '\n' + '4. Delete your account')
     nextstep = int(input('What do you want to do: '))
     print()
+
     if nextstep == 1:
-        print()
         dbfunctions.balance_return(cursor, IDinput, userinput, passwordinput)
+        print('Your balance is:', dbfunctions.balance_return(cursor, IDinput, userinput, passwordinput))
     elif nextstep == 2:
-        print('Dear', userinput, 'your balance after the transaction is:', dbfunctions.select(cursor, 'TransactionHistory'))
-        dbfunctions.select(cursor, 'TransactionHistory')
+        
+        dbfunctions.select_transaction(cursor, 'TransactionHistory', IDinput)
+
+
     elif nextstep == 3:
         askcompany = input('Enter the company name: ')
         askcost = int(input('Enter the cost: '))
+        print()
         dbfunctions.insertTransaction(cursor, 'TransactionHistory', IDinput, askcompany, askcost)
         balance = dbfunctions.balance_return(cursor, IDinput, userinput, passwordinput) - askcost
             
-        print("Your balance after the transaction is ", balance)
+        print("Your balance after the transaction is:", balance)
             
         #Update the balance
         dbfunctions.updateCustomer(cursor, IDinput, balance)
-        print("Transaction successful")
+        print("Transaction successful" + '\n')
 
     elif nextstep == 4:
         dbfunctions.deleteCustomer(cursor, IDinput)
         print('Account deleted successfully!')
 
-def driver():
+def driver(cursor, sqliteConnection):
     try:
 
-        sqliteConnection = sqlite3.connect('database.db')
-        cursor = sqliteConnection.cursor()
-        print('Database initialization successful' + '\n')
         
+        print()
         print('1. Log in' + '\n' + '2. Sign up')
         Option1 = input('Type 1 or 2: ')
+        print()
         
         if Option1 == '1':
             IDinput = input('Enter your ID: ')
@@ -56,7 +59,7 @@ def driver():
             userinput = input('Enter a name: ')
             passwordinput = input('Enter a password: ')
             balanceinput = input('Enter the balance you want to deposit: ')
-            dbfunctions.insertCustomer(cursor, 'Customers', userinput, passwordinput, 100)
+            dbfunctions.insertCustomer(cursor, 'Customers', userinput, passwordinput, balanceinput)
             dbfunctions.insertTransaction(cursor, 'TransactionHistory', dbfunctions.idreturn(cursor, userinput, passwordinput), 'null', balanceinput)
             print('Account created successfully!')
             print('Your ID is:', dbfunctions.idreturn(cursor, userinput, passwordinput))
@@ -64,32 +67,41 @@ def driver():
 
         sqliteConnection.commit()
 
-        #filecontrol = open("demofile.txt", "a")
         
-        #filecontrol.write(dbfunctions.return_select(cursor))
-
-        dbfunctions.select(cursor, 'Customers')
-
+        sqliteConnection.commit()
+        # Close the cursor
         
+ 
+    # Handle errors
+    except sqlite3.Error as error:
+        print('Error occurred;', error )
+    
+
+sqliteConnection = sqlite3.connect('database.db')
+cursor = sqliteConnection.cursor()
+print('Database initialization successful' + '\n')
+
+
+driver(cursor, sqliteConnection)
+ask = input('Do you want to continue? (Y/N): ')
+while ask == 'Y' or ask == 'y' or ask == 'yes' or ask == 'Yes' or ask == 'YES':
+    driver(cursor, sqliteConnection)
+    print()
+    ask = input('Do you want to continue? (Y/N): ')
+
+cursor.close()
+
+if sqliteConnection:
+    sqliteConnection.close()
+    print('Database connection closed')
 
     
 
-
+        #filecontrol = open("demofile.txt", "a")
         
-
-          
-            
-            
-            
-
-                  
-
-        
-        
-
-
-
-        '''
+        #filecontrol.write(dbfunctions.return_select(cursor))
+ 
+    '''
         dbfunctions.insert(cursor, 'John Doe', 50, 100)
         
 
@@ -107,18 +119,3 @@ def driver():
 
         "w" - Write - will overwrite any existing content
         '''
-
-        sqliteConnection.commit()
-        # Close the cursor
-        cursor.close()
-
-        if sqliteConnection:
-            sqliteConnection.close()
-            print('Database connection closed')
- 
-    # Handle errors
-    except sqlite3.Error as error:
-        print('Error occurred;', error )
-    
-
-driver()

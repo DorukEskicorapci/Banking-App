@@ -6,7 +6,7 @@ class dbfunctions:
         cursor.execute('''INSERT INTO {} (Name, Password, Balance) VALUES(?, ?, ?)'''.format(table), (name, password, balance))
     
     def insertTransaction(cursor, table, UserID, CompanyName, Cost):
-            
+        Cost = -Cost
         cursor.execute('''INSERT INTO {} (UserID, CompanyName, Cost) VALUES(?, ?, ?)'''.format(table), (UserID, CompanyName, Cost))
         
     def updateCustomer(cursor, CustomerID, balance):   
@@ -17,6 +17,13 @@ class dbfunctions:
         cursor.execute('''SELECT * FROM {}'''.format(table))
         for row in cursor:
             print(row)
+    def select_transaction(cursor, table, IDinput):
+        print('Transaction history (UserID, Company Name, Cost):' + '\n')
+        cursor.execute('''SELECT UserID, CompanyName, Cost FROM {} WHERE UserID = ?'''.format(table), (IDinput,))
+        for row in cursor:      
+            print('| {:^4} | {:^12} | {:^4} |'.format(*row))
+        
+
 
     def return_select(cursor):
         printc = ''
@@ -48,6 +55,7 @@ class dbfunctions:
         result = cursor.fetchone()
         if result:
             #print('Dear', userinput, 'your balance after the transaction is:', result[0])
+
             return result[0]
             #print('Dear', userinput, 'your balance is:', result[0])
 
