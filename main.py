@@ -12,7 +12,7 @@ def useraccess(cursor, IDinput, userinput, passwordinput):
         driver(cursor, sqliteConnection)
             
         
-    print('1. View your balance' + '\n' + '2. View your transaction history' + '\n' + '3. Make new transaction' + '\n' + '4. Delete your account')
+    print('1. View your balance' + '\n' + '2. View your transaction history' + '\n' + '3. Make new transaction' + '\n' + '4. Deposit money'+'\n' + '5. Delete your account')
     nextstep = int(input('What do you want to do: '))
     print()
 
@@ -24,7 +24,7 @@ def useraccess(cursor, IDinput, userinput, passwordinput):
         dbfunctions.select_transaction(cursor, 'TransactionHistory', IDinput)
 
         filecontrol = open("printfile.txt", "a")
-        filecontrol.write("\n"+ "Transaction history (UserID, Company Name, Cost):\n")
+        filecontrol.write("-------\n"+ "Transaction history (UserID, Company Name, Cost):\n")
         cursor.execute('''SELECT UserID, CompanyName, Cost FROM {} WHERE UserID = ?'''.format('TransactionHistory'), (IDinput,))
         for row in cursor:
             filecontrol.write(str(row))
@@ -47,13 +47,23 @@ def useraccess(cursor, IDinput, userinput, passwordinput):
             
         #Update the balance
         dbfunctions.updateCustomer(cursor, IDinput, balance)
-        print("Transaction successful" + '\n')
+        
         
         filecontrol = open("printfile.txt", "a")
         
-        filecontrol.write("Transaction successful" + '\n' + 'Company: ' + askcompany + '\n' + 'Cost: ' + str(askcost) + '\n' + 'Balance: ' + str(balance) + '\n' + '\n')
-
+        filecontrol.write("\n-------\n" + "Transaction successful \nSummary:\n\n" + 'UserID: ' + IDinput +'\n' + 'Company: ' + askcompany + '\n' + 'Cost: ' + str(askcost) + '\n' + 'Balance after the transaction: ' + str(balance) + '\n' + '\n')
+        print("Transaction successful" + '\nYour transaction summary has been printed to printfile.txt' + '\n')
     elif nextstep == 4:
+        askdeposit = int(input('Enter the amount you want to deposit: '))
+        print()
+        askdeposit = -int(askdeposit)
+
+        dbfunctions.insertTransaction(cursor, 'TransactionHistory', dbfunctions.idreturn(cursor, userinput, passwordinput), 'null', askdeposit)
+        balance = dbfunctions.balance_return(cursor, IDinput, userinput, passwordinput) - askdeposit
+        dbfunctions.updateCustomer(cursor, IDinput, balance)
+        print('Deposit successful!' + '\n' + 'Your new balance is:', balance)
+
+    elif nextstep == 5:
         dbfunctions.deleteCustomer(cursor, IDinput)
         print('Account deleted successfully!')
 
