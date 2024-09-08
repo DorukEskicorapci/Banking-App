@@ -76,6 +76,7 @@ def driver(cursor, sqliteConnection):
             passwordinput = input('Enter a password: ')
             balanceinput = input('Enter the balance you want to deposit: ')
             dbfunctions.insertCustomer(cursor, 'Customers', userinput, passwordinput, balanceinput)
+            balanceinput = -int(balanceinput)
             dbfunctions.insertTransaction(cursor, 'TransactionHistory', dbfunctions.idreturn(cursor, userinput, passwordinput), 'null', balanceinput)
             print('Account created successfully!')
             print('Your ID is:', dbfunctions.idreturn(cursor, userinput, passwordinput))
