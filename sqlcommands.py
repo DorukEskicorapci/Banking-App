@@ -30,13 +30,19 @@ class dbfunctions:
         checkpassword = False
         checkid = False
         check = False
+        IDinput = int(IDinput)
         cursor.execute('''SELECT * FROM Customers WHERE CustomerID = ? AND Name = ? AND Password = ?''', (IDinput, userinput, passwordinput))
         
         for row in cursor:
             if row[0] == IDinput and row[1] == userinput and row[2] == passwordinput:
                 check = True
         return check
-
+    
+    def idreturn(cursor, userinput, passwordinput):
+        cursor.execute('''SELECT CustomerID FROM Customers WHERE Name = ? AND Password = ?''', (userinput, passwordinput))
+        
+        return cursor.fetchone()[0]
+    
     def balance_return(cursor, IDinput, userinput, passwordinput):
         cursor.execute('''SELECT Balance FROM Customers WHERE CustomerID = ? AND Name = ? AND Password = ?''', (IDinput, userinput, passwordinput))
         result = cursor.fetchone()
@@ -47,3 +53,8 @@ class dbfunctions:
 
         else:
             print('No matching record found')
+    def deleteCustomer(cursor, CustomerID):
+        cursor.execute('''DELETE FROM Customers WHERE CustomerID = ?''', (CustomerID,))
+        cursor.execute('''DELETE FROM TransactionHistory WHERE UserID = ?''', (CustomerID,))
+
+                
