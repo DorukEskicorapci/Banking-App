@@ -23,6 +23,18 @@ def useraccess(cursor, IDinput, userinput, passwordinput):
         
         dbfunctions.select_transaction(cursor, 'TransactionHistory', IDinput)
 
+        filecontrol = open("printfile.txt", "a")
+        filecontrol.write("\n"+ "Transaction history (UserID, Company Name, Cost):\n")
+        cursor.execute('''SELECT UserID, CompanyName, Cost FROM {} WHERE UserID = ?'''.format('TransactionHistory'), (IDinput,))
+        for row in cursor:
+            filecontrol.write(str(row))
+
+        print()
+        print('Transaction history printed to printfile.txt')
+            
+        
+        
+        filecontrol.close()
 
     elif nextstep == 3:
         askcompany = input('Enter the company name: ')
@@ -36,6 +48,10 @@ def useraccess(cursor, IDinput, userinput, passwordinput):
         #Update the balance
         dbfunctions.updateCustomer(cursor, IDinput, balance)
         print("Transaction successful" + '\n')
+        
+        filecontrol = open("printfile.txt", "a")
+        
+        filecontrol.write("Transaction successful" + '\n' + 'Company: ' + askcompany + '\n' + 'Cost: ' + str(askcost) + '\n' + 'Balance: ' + str(balance) + '\n' + '\n')
 
     elif nextstep == 4:
         dbfunctions.deleteCustomer(cursor, IDinput)
