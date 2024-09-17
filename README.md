@@ -13,7 +13,7 @@ The application provides functionalities for user authentication and various tra
 - **View Transaction History**: Enables users to view and print their transaction history.
 - **Make New Transaction**: Users are able to create new transactions.
 - **Make Deposit**: Users are able to deposit money into their accounts.
-- **Delete Account**: Provides an option to delete the user account.
+- **Delete Account**: Provides an option to delete the user account and the related data from transaction history.
 
 **File Descriptions:**
 
