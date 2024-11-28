@@ -4,7 +4,7 @@ This project is a Python application designed to manage user access and handle t
 
 **Features:**
 
-The application provides functionalities for user authentication and various transaction-related operations. It uses core Python concepts including functions, conditionals, file handling, and  SQLite for database management.
+The application provides functionalities for user authentication and various transaction-related operations. It uses core Python concepts including functions, conditionals, file handling, error-handling, and  SQLite for database management.
 
 **Key Functionalities:**
 
